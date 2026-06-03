@@ -3,7 +3,7 @@
   "description": "Composes Google Calendar, Gmail, and Drive into a one-command meeting brief. Demonstrates the marketplace-of-skills pattern: install once, every employee gets it.",
   "version": "0.1.0",
   "author": {
-    "name": "Callan Hodgskin",
+    "name": "Callan Rogers-Grazado",
     "email": "callanatalanta@gmail.com"
   }
 }
