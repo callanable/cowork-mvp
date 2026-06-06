@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Cowork Skills Marketplace</title>
   <meta name="description" content="A marketplace of installable, governable AI skills for Cowork. One install — every employee gets it." />
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
   <style>
     :root {
       --bg: #fafaf7;
@@ -17,6 +18,10 @@
       --accent-soft: #ebf3fb;
       --code-bg: #1e1e1e;
       --code-ink: #f3f3f3;
+      --ok: #2f6f3f;
+      --ok-soft: #e6f0eb;
+      --no: #a85d2c;
+      --no-soft: #fdf0e6;
       --radius: 10px;
       --font: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
       --mono: "SF Mono", ui-monospace, Menlo, Consolas, monospace;
@@ -25,20 +30,48 @@
     html, body { margin: 0; padding: 0; background: var(--bg); color: var(--ink); font-family: var(--font); line-height: 1.55; -webkit-font-smoothing: antialiased; }
     a { color: var(--accent); text-decoration: none; }
     a:hover { text-decoration: underline; }
-    .container { max-width: 880px; margin: 0 auto; padding: 64px 24px 96px; }
-    header.hero { margin-bottom: 56px; }
+    .container { max-width: 880px; margin: 0 auto; padding: 32px 24px 96px; }
+
+    .topbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; gap: 16px; flex-wrap: wrap; }
+    .topbar-brand { font-size: 13px; color: var(--ink-faint); letter-spacing: 0.04em; }
+    .topbar-brand strong { color: var(--ink); font-weight: 600; }
+    .auth-slot { display: flex; align-items: center; gap: 12px; min-height: 40px; }
+    .auth-user { display: flex; align-items: center; gap: 10px; font-size: 14px; }
+    .auth-user img { width: 28px; height: 28px; border-radius: 50%; }
+    .auth-user .email { color: var(--ink); font-weight: 500; }
+    .signout { background: transparent; border: 1px solid var(--border); color: var(--ink-soft); padding: 6px 10px; font: inherit; font-size: 12px; border-radius: 6px; cursor: pointer; }
+    .signout:hover { background: var(--surface); color: var(--ink); }
+
+    header.hero { margin-bottom: 40px; }
     .eyebrow { font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 12px; }
     h1 { font-size: 38px; line-height: 1.15; margin: 0 0 16px; letter-spacing: -0.02em; }
     .lede { font-size: 18px; color: var(--ink-soft); max-width: 640px; margin: 0; }
     .lede strong { color: var(--ink); font-weight: 600; }
 
-    section.about { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px 28px; margin-bottom: 48px; }
+    section.about { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px 28px; margin-bottom: 40px; }
     section.about p { margin: 0; color: var(--ink-soft); font-size: 15px; }
     section.about p + p { margin-top: 12px; }
 
+    /* Provisioning banner */
+    .prov { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px 28px; margin-bottom: 40px; display: none; }
+    .prov.active { display: block; }
+    .prov-head { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; flex-wrap: wrap; margin-bottom: 18px; }
+    .prov-head .label { font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-faint); font-weight: 600; }
+    .prov-head .role-picker { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--ink-soft); }
+    .prov-head .role-picker select { font: inherit; font-size: 13px; padding: 4px 8px; border: 1px solid var(--border); border-radius: 6px; background: var(--bg); color: var(--ink); }
+    .prov-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 8px 16px; }
+    .prov-row { display: flex; align-items: center; gap: 8px; font-size: 14px; padding: 4px 0; }
+    .prov-row .status { font-size: 11px; padding: 2px 7px; border-radius: 999px; font-weight: 600; letter-spacing: 0.03em; text-transform: uppercase; }
+    .prov-row .status.yes { background: var(--ok-soft); color: var(--ok); }
+    .prov-row .status.no { background: var(--no-soft); color: var(--no); }
+    .prov-row .name { color: var(--ink); }
+    .prov-foot { margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--border); font-size: 12px; color: var(--ink-faint); line-height: 1.5; }
+    .prov-foot a { color: var(--accent); }
+
     h2.section-title { font-size: 13px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-faint); margin: 0 0 16px; font-weight: 600; }
 
-    .plugin { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px; margin-bottom: 20px; }
+    .plugin { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px; margin-bottom: 20px; position: relative; transition: opacity 0.15s; }
+    .plugin.unprovisioned { opacity: 0.55; }
     .plugin-head { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
     .plugin-name { font-size: 22px; margin: 0; letter-spacing: -0.01em; }
     .plugin-name code { font-family: var(--mono); font-size: 18px; background: var(--accent-soft); color: var(--accent); padding: 2px 8px; border-radius: 6px; }
@@ -46,6 +79,8 @@
     .pill { display: inline-block; font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; background: #f0ede4; color: var(--ink-soft); padding: 3px 8px; border-radius: 999px; font-weight: 600; }
     .pill.audience-internal { background: #e6f0eb; color: #2f6f3f; }
     .pill.audience-customer { background: #fdf0e6; color: #a55c1f; }
+    .pill.prov-yes { background: var(--ok-soft); color: var(--ok); }
+    .pill.prov-no { background: var(--no-soft); color: var(--no); }
     .plugin-desc { color: var(--ink-soft); margin: 16px 0 0; font-size: 15px; }
     .plugin-requires { margin: 10px 0 0; font-size: 13px; color: var(--ink-faint); }
     .plugin-requires a { color: var(--accent); }
@@ -58,7 +93,7 @@
     .install-cmds .cmd::before { content: "$ "; color: #888; }
     .copy-btn { background: #2d2d2d; color: var(--code-ink); border: 1px solid #3a3a3a; padding: 6px 12px; font: inherit; font-size: 12px; border-radius: 6px; cursor: pointer; flex-shrink: 0; transition: background 0.15s; }
     .copy-btn:hover { background: #3a3a3a; }
-    .copy-btn.copied { background: #2f6f3f; border-color: #2f6f3f; }
+    .copy-btn.copied { background: var(--ok); border-color: var(--ok); }
 
     details.example { margin-top: 24px; border-top: 1px solid var(--border); padding-top: 20px; }
     details.example > summary { cursor: pointer; font-size: 13px; color: var(--accent); font-weight: 500; list-style: none; }
@@ -70,38 +105,75 @@
     footer { margin-top: 56px; padding-top: 24px; border-top: 1px solid var(--border); font-size: 13px; color: var(--ink-faint); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
 
     @media (max-width: 640px) {
-      .container { padding: 40px 18px 64px; }
+      .container { padding: 24px 18px 64px; }
       h1 { font-size: 30px; }
       .lede { font-size: 16px; }
       .plugin { padding: 22px; }
+      .prov { padding: 20px; }
     }
   </style>
 </head>
 <body>
   <div class="container">
+    <div class="topbar">
+      <div class="topbar-brand">Cowork · <strong>Skills Marketplace</strong></div>
+      <div class="auth-slot" id="auth-slot">
+        <!-- Sign-in button or signed-in chip rendered here -->
+      </div>
+    </div>
+
     <header class="hero">
-      <div class="eyebrow">Cowork · Skills Marketplace</div>
-      <h1>Install once. Every employee gets it.</h1>
-      <p class="lede">A marketplace of <strong>installable, governable AI skills</strong>. Skills compose the MCPs your org already has — calendar, email, drive, CRM — into one-command workflows your team uses without thinking about it.</p>
+      <div class="eyebrow">Demo MVP · Bloomerang AI Platform Engineer interview</div>
+      <h1>Sign in once. Every tool ready on day one.</h1>
+      <p class="lede">A marketplace of <strong>installable, governable AI skills</strong>. Sign in with Google → the platform reads your identity and provisions the right MCPs and skills for your role. Skills compose the MCPs your org already owns into one-command workflows.</p>
     </header>
 
     <section class="about">
-      <p>This is the MVP marketplace — one plugin today, built to demonstrate the pattern. The install primitive is Claude Code's <code>/plugin marketplace</code>; the unit of capability is a skill; the governance layer is whatever MCPs you've scoped to that user. The platform is mostly composition.</p>
-      <p>See <a href="https://github.com/callanable/cowork-mvp" id="repo-link">the repo</a> for the design doc on how this generalizes — memory layer, RBAC via MCP scoping, PR-based shipping.</p>
+      <p>This page demonstrates the <strong>Frictionless Access</strong> pattern from the JD: OIDC identity → role mapping → provisioned MCPs → available skills. The sign-in is real (Google OIDC); the role-to-MCP mapping is mocked for the demo. In production, claims come from your Workspace groups, SCIM, or HRIS, and the platform's identity broker owns the mapping config.</p>
+      <p>See <a href="https://github.com/callanable/cowork-mvp" target="_blank" rel="noopener">cowork-mvp</a> for the marketplace + skills, and <a href="https://github.com/callanable/bloomerang-mcp" target="_blank" rel="noopener">bloomerang-mcp</a> for the data-primitive pattern.</p>
     </section>
 
-    <h2 class="section-title">Available skills</h2>
+    <!-- Provisioning banner: hidden until signed in -->
+    <section class="prov" id="prov">
+      <div class="prov-head">
+        <span class="label">Your provisioned access</span>
+        <div class="role-picker">
+          <label for="role-select">Demo role:</label>
+          <select id="role-select"></select>
+        </div>
+      </div>
+      <div class="prov-grid" id="prov-grid"></div>
+      <div class="prov-foot">
+        The role above is a demo selector. In production, it's derived from your identity claims —
+        Google Workspace group memberships, SCIM-synced HRIS attributes, or platform-owned role assignments.
+        Each MCP's wiring is governed at the platform layer; skills are portable across roles and inherit
+        whichever data primitives are scoped to the user. See
+        <a href="https://github.com/callanable/cowork-mvp/blob/main/DESIGN.md" target="_blank" rel="noopener">DESIGN.md</a>
+        for the full framing.
+      </div>
+    </section>
+
+    <h2 class="section-title">Skills</h2>
     <div id="plugin-list"></div>
 
     <footer>
       <span>Cowork Skills Marketplace · MVP</span>
-      <span><a href="https://github.com/callanable/cowork-mvp" id="repo-link-foot">View on GitHub</a></span>
+      <span><a href="https://github.com/callanable/cowork-mvp" target="_blank" rel="noopener">View on GitHub</a></span>
     </footer>
   </div>
 
   <script>
-    // Mirrors .claude-plugin/marketplace.json. Single source of truth lives there;
-    // this is the rendered view. Keep them in sync when adding plugins.
+    // ─────────────────────────────────────────────────────────────────
+    // Config
+    // ─────────────────────────────────────────────────────────────────
+
+    const CLIENT_ID = "459851111074-bd9imsgsq5940uke0sidh48vptrl4v4a.apps.googleusercontent.com";
+    const MARKETPLACE_PATH = "~/cowork-mvp"; // shown in install commands
+
+    // ─────────────────────────────────────────────────────────────────
+    // Marketplace data (mirrors .claude-plugin/marketplace.json)
+    // ─────────────────────────────────────────────────────────────────
+
     const MARKETPLACE = {
       name: "cowork-mvp",
       plugins: [
@@ -210,14 +282,96 @@ Q3 check-in.
       ],
     };
 
-    const MARKETPLACE_PATH = "~/cowork-mvp"; // local clone path users see in install steps
+    // ─────────────────────────────────────────────────────────────────
+    // Role → provisioning map (the demo of "Frictionless Access")
+    //
+    // In production, this lives in the platform's identity broker. Claims
+    // from the OIDC ID token (workspace groups, SCIM-synced role) →
+    // entitlements lookup → wired MCPs → available skills.
+    // ─────────────────────────────────────────────────────────────────
 
-    function installCommands(pluginName) {
-      return [
-        `/plugin marketplace add ${MARKETPLACE_PATH}`,
-        `/plugin install ${pluginName}@${MARKETPLACE.name}`,
-      ];
-    }
+    const ROLES = {
+      csm: {
+        label: "Customer Success Manager (internal)",
+        audience: "internal",
+        mcps: [
+          { name: "Google Calendar", status: "yes" },
+          { name: "Gmail", status: "yes" },
+          { name: "Google Drive", status: "yes" },
+          { name: "Bloomerang Admin", status: "yes" },
+          { name: "Zendesk", status: "yes" },
+          { name: "Salesforce", status: "no" },
+          { name: "Looker", status: "no" },
+        ],
+        provisioned: new Set(["meeting-prep", "customer-snapshot"]),
+      },
+      ae: {
+        label: "Account Executive (internal)",
+        audience: "internal",
+        mcps: [
+          { name: "Google Calendar", status: "yes" },
+          { name: "Gmail", status: "yes" },
+          { name: "Google Drive", status: "yes" },
+          { name: "Bloomerang Admin", status: "yes" },
+          { name: "Salesforce", status: "yes" },
+          { name: "Zendesk", status: "no" },
+          { name: "Looker", status: "no" },
+        ],
+        provisioned: new Set(["meeting-prep", "customer-snapshot"]),
+      },
+      support: {
+        label: "Support Engineer (internal)",
+        audience: "internal",
+        mcps: [
+          { name: "Google Calendar", status: "yes" },
+          { name: "Gmail", status: "yes" },
+          { name: "Google Drive", status: "yes" },
+          { name: "Bloomerang Admin", status: "yes" },
+          { name: "Zendesk", status: "yes" },
+          { name: "Salesforce", status: "no" },
+          { name: "Looker", status: "no" },
+        ],
+        provisioned: new Set(["meeting-prep", "customer-snapshot"]),
+      },
+      engineer: {
+        label: "Software Engineer (internal)",
+        audience: "internal",
+        mcps: [
+          { name: "Google Calendar", status: "yes" },
+          { name: "Gmail", status: "yes" },
+          { name: "Google Drive", status: "yes" },
+          { name: "GitHub", status: "yes" },
+          { name: "Sentry", status: "yes" },
+          { name: "Bloomerang Admin", status: "no" },
+          { name: "Salesforce", status: "no" },
+        ],
+        provisioned: new Set(["meeting-prep"]),
+      },
+      external: {
+        label: "External — Cowork customer (fundraiser at a nonprofit)",
+        audience: "customer",
+        mcps: [
+          { name: "Google Calendar", status: "yes" },
+          { name: "Gmail", status: "yes" },
+          { name: "Google Drive", status: "yes" },
+          { name: "Bloomerang Donor CRM", status: "yes" },
+          { name: "Bloomerang Admin (internal)", status: "no" },
+          { name: "Salesforce (internal)", status: "no" },
+        ],
+        provisioned: new Set(["meeting-prep", "thank-you"]),
+      },
+    };
+
+    // ─────────────────────────────────────────────────────────────────
+    // State
+    // ─────────────────────────────────────────────────────────────────
+
+    let currentUser = null;   // { email, name, picture } or null
+    let currentRole = "csm";  // default demo role
+
+    // ─────────────────────────────────────────────────────────────────
+    // Utilities
+    // ─────────────────────────────────────────────────────────────────
 
     function el(tag, attrs = {}, ...children) {
       const node = document.createElement(tag);
@@ -233,8 +387,154 @@ Q3 check-in.
       return node;
     }
 
+    function clear(node) { while (node.firstChild) node.removeChild(node.firstChild); }
+
+    // Decode the JWT payload for display only. Production must verify the
+    // signature against Google's JWKs server-side — never trust unverified
+    // claims for authorization decisions.
+    function decodeJwtPayload(jwt) {
+      const base64Url = jwt.split(".")[1];
+      const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+      const padded = base64 + "=".repeat((4 - base64.length % 4) % 4);
+      const json = decodeURIComponent(
+        atob(padded)
+          .split("")
+          .map((c) => "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2))
+          .join(""),
+      );
+      return JSON.parse(json);
+    }
+
+    function installCommands(pluginName) {
+      return [
+        `/plugin marketplace add ${MARKETPLACE_PATH}`,
+        `/plugin install ${pluginName}@${MARKETPLACE.name}`,
+      ];
+    }
+
+    // ─────────────────────────────────────────────────────────────────
+    // Sign-in (Google Identity Services)
+    // ─────────────────────────────────────────────────────────────────
+
+    function initGoogleSignIn() {
+      if (!window.google || !window.google.accounts || !window.google.accounts.id) {
+        // Library not loaded yet — retry shortly.
+        setTimeout(initGoogleSignIn, 200);
+        return;
+      }
+      google.accounts.id.initialize({
+        client_id: CLIENT_ID,
+        callback: handleCredential,
+        auto_select: false,
+        cancel_on_tap_outside: true,
+      });
+      renderAuthSlot();
+    }
+
+    function handleCredential(response) {
+      try {
+        const payload = decodeJwtPayload(response.credential);
+        currentUser = {
+          email: payload.email,
+          name: payload.name || payload.email,
+          picture: payload.picture,
+        };
+        renderAuthSlot();
+        renderProvisioning();
+        renderPluginList();
+      } catch (e) {
+        console.error("Failed to decode credential:", e);
+      }
+    }
+
+    function signOut() {
+      currentUser = null;
+      try { google.accounts.id.disableAutoSelect(); } catch (e) {}
+      renderAuthSlot();
+      renderProvisioning();
+      renderPluginList();
+    }
+
+    function renderAuthSlot() {
+      const slot = document.getElementById("auth-slot");
+      clear(slot);
+      if (currentUser) {
+        const chip = el(
+          "div",
+          { class: "auth-user" },
+          currentUser.picture ? el("img", { src: currentUser.picture, alt: "" }) : null,
+          el("span", {}, el("span", { class: "email" }, currentUser.email)),
+        );
+        const btn = el("button", { class: "signout", type: "button" }, "Sign out");
+        btn.addEventListener("click", signOut);
+        slot.appendChild(chip);
+        slot.appendChild(btn);
+      } else {
+        // Container for the GIS-rendered button.
+        const btnContainer = el("div", { id: "gis-button" });
+        slot.appendChild(btnContainer);
+        if (window.google && google.accounts && google.accounts.id) {
+          google.accounts.id.renderButton(btnContainer, {
+            type: "standard",
+            theme: "outline",
+            size: "medium",
+            text: "signin_with",
+            shape: "rectangular",
+            logo_alignment: "left",
+          });
+        }
+      }
+    }
+
+    // ─────────────────────────────────────────────────────────────────
+    // Provisioning banner
+    // ─────────────────────────────────────────────────────────────────
+
+    function renderProvisioning() {
+      const banner = document.getElementById("prov");
+      if (!currentUser) {
+        banner.classList.remove("active");
+        return;
+      }
+      banner.classList.add("active");
+
+      // Populate role picker (idempotent — only on first render)
+      const select = document.getElementById("role-select");
+      if (select.children.length === 0) {
+        Object.entries(ROLES).forEach(([key, role]) => {
+          select.appendChild(el("option", { value: key }, role.label));
+        });
+        select.value = currentRole;
+        select.addEventListener("change", () => {
+          currentRole = select.value;
+          renderProvisioning();
+          renderPluginList();
+        });
+      }
+
+      const grid = document.getElementById("prov-grid");
+      clear(grid);
+      const role = ROLES[currentRole];
+      role.mcps.forEach((mcp) => {
+        grid.appendChild(
+          el(
+            "div",
+            { class: "prov-row" },
+            el("span", { class: `status ${mcp.status}` }, mcp.status === "yes" ? "wired" : "scoped out"),
+            el("span", { class: "name" }, mcp.name),
+          ),
+        );
+      });
+    }
+
+    // ─────────────────────────────────────────────────────────────────
+    // Plugin cards
+    // ─────────────────────────────────────────────────────────────────
+
     function renderPlugin(plugin) {
       const cmds = installCommands(plugin.name);
+      const role = currentUser ? ROLES[currentRole] : null;
+      const provisioned = role ? role.provisioned.has(plugin.name) : null;
 
       const copyBtn = el("button", { class: "copy-btn", type: "button" }, "Copy");
       copyBtn.addEventListener("click", async () => {
@@ -251,9 +551,11 @@ Q3 check-in.
         }
       });
 
+      const cardClass = provisioned === false ? "plugin unprovisioned" : "plugin";
+
       return el(
         "article",
-        { class: "plugin" },
+        { class: cardClass },
         el(
           "div",
           { class: "plugin-head" },
@@ -261,6 +563,11 @@ Q3 check-in.
           el(
             "div",
             { class: "plugin-meta" },
+            provisioned === true
+              ? el("span", { class: "pill prov-yes" }, "provisioned")
+              : provisioned === false
+                ? el("span", { class: "pill prov-no" }, "not in your scope")
+                : null,
             plugin.audience
               ? el(
                   "span",
@@ -308,8 +615,18 @@ Q3 check-in.
       );
     }
 
-    const list = document.getElementById("plugin-list");
-    MARKETPLACE.plugins.forEach((p) => list.appendChild(renderPlugin(p)));
+    function renderPluginList() {
+      const list = document.getElementById("plugin-list");
+      clear(list);
+      MARKETPLACE.plugins.forEach((p) => list.appendChild(renderPlugin(p)));
+    }
+
+    // ─────────────────────────────────────────────────────────────────
+    // Bootstrap
+    // ─────────────────────────────────────────────────────────────────
+
+    renderPluginList();
+    initGoogleSignIn();
   </script>
 </body>
 </html>
