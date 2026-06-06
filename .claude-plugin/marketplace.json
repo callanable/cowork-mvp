@@ -24,6 +24,15 @@
       },
       "category": "fundraising",
       "source": "./plugins/thank-you"
+    },
+    {
+      "name": "customer-snapshot",
+      "description": "One-screen snapshot of a Bloomerang nonprofit customer — account record, usage signals, recent touches, and a suggested next action. For CS and Support to run before any customer conversation.",
+      "author": {
+        "name": "Callan Rogers-Grazado"
+      },
+      "category": "customer-success",
+      "source": "./plugins/customer-snapshot"
     }
   ]
 }

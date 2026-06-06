@@ -2,12 +2,18 @@
 
 A small Claude Code plugin marketplace built around a single thesis: the unit of capability in an internal AI platform is an **installable skill that composes existing MCPs**.
 
-Currently ships two skills:
+Currently ships three skills, spanning two audiences:
 
+**For any employee with meetings:**
 - **`/meeting-prep`** — Pre-meeting brief from Calendar + Gmail + Drive. (No external MCP required beyond first-party Google connectors.)
-- **`/thank-you`** — Drafts personalized donor thank-yous from recent Bloomerang gifts. Requires the companion [bloomerang-mcp](https://github.com/callanable/bloomerang-mcp) server.
 
-Both are small on purpose. The point is the *pattern*: installable, governable, shareable capabilities that compose primitives the platform team already owns.
+**For Bloomerang's own CS / Support / Sales teams (the audience this platform actually serves):**
+- **`/customer-snapshot`** — One-screen snapshot of a nonprofit customer before any call: account record, usage signals, recent touches, suggested next action. Requires [bloomerang-mcp](https://github.com/callanable/bloomerang-mcp).
+
+**For Bloomerang's *customers* (a fundraiser at a nonprofit using Cowork):**
+- **`/thank-you`** — Drafts personalized donor thank-yous from recent Bloomerang gifts. Requires [bloomerang-mcp](https://github.com/callanable/bloomerang-mcp). Demonstrates that the same marketplace + MCP architecture serves both internal users and the customers our customers serve.
+
+All three are small on purpose. The point is the *pattern*: installable, governable, shareable capabilities that compose primitives the platform team already owns.
 
 See [`DESIGN.md`](DESIGN.md) for how this generalizes to a real internal AI platform — memory layer, RBAC via MCP scoping, PR-based shipping. See the [marketplace site](https://callanable.github.io/cowork-mvp/) for a browseable view.
 

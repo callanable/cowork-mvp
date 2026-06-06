@@ -44,6 +44,8 @@
     .plugin-name code { font-family: var(--mono); font-size: 18px; background: var(--accent-soft); color: var(--accent); padding: 2px 8px; border-radius: 6px; }
     .plugin-meta { font-size: 13px; color: var(--ink-faint); display: flex; gap: 12px; align-items: center; }
     .pill { display: inline-block; font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; background: #f0ede4; color: var(--ink-soft); padding: 3px 8px; border-radius: 999px; font-weight: 600; }
+    .pill.audience-internal { background: #e6f0eb; color: #2f6f3f; }
+    .pill.audience-customer { background: #fdf0e6; color: #a55c1f; }
     .plugin-desc { color: var(--ink-soft); margin: 16px 0 0; font-size: 15px; }
     .plugin-requires { margin: 10px 0 0; font-size: 13px; color: var(--ink-faint); }
     .plugin-requires a { color: var(--accent); }
@@ -108,6 +110,7 @@
           category: "productivity",
           description: "Composes Google Calendar, Gmail, and Drive into a one-command meeting brief. Run it before any meeting and get a one-page brief — attendees, recent email context per person, related Drive docs, open threads, suggested talking points.",
           author: "Callan Rogers-Grazado",
+          audience: "internal",
           example: `# Meeting Prep — Quarterly review with Acme Foundation
 Tuesday 2:00 PM · 30 min · meet.google.com/abc-defg-hij
 
@@ -131,10 +134,49 @@ asking about the new recurring-giving widget on May 12; no reply yet.
 - Ask about staffing changes — Mark's title in his sig changed`,
         },
         {
+          name: "customer-snapshot",
+          category: "customer-success",
+          description: "One-screen snapshot of a Bloomerang nonprofit customer — account record, usage signals, recent touches, open items, and a suggested next action. The CSM/Support skill you run before every customer conversation.",
+          author: "Callan Rogers-Grazado",
+          audience: "internal",
+          requires: {
+            label: "bloomerang-mcp",
+            href: "https://github.com/callanable/bloomerang-mcp",
+          },
+          example: `# Customer Snapshot — Acme Foundation
+active · last touch 2026-05-12 · primary contact Jane Smith
+
+## Account
+- Lifetime CRM activity: $175,000 across 4 transactions
+- Last activity: 2026-04-10 · $25,000 · Spring Appeal (Recurring Giving)
+- Primary contact: Jane Smith, Director of Development
+
+## Product signals
+- Heavy use of recurring-giving program (restricted $25K to expansion)
+- Trajectory growing — 22% YoY lift on spring appeal reported in April
+- Engaged technical contact (Mark) actively integrating CSV exports
+
+## Open items
+- 2026-05-12: Jane asked about Q3 roadmap for recurring-giving widget — no reply
+- 2026-04-12 QBR: confirmed Q3 expansion conversation for August
+
+## Suggested next action
+- Reply to Jane's May 12 thread — the recurring-giving roadmap update
+  shipped last week. This is the highest-leverage touch.
+- Confirm August Q3 expansion meeting is on her calendar.
+
+---
+Sources: bloomerang-mcp (4 calls).
+Not yet wired in this demo: Zendesk (open tickets, severity, age),
+  Salesforce (renewal date, ARR, CSM owner, health score),
+  Looker (login frequency, feature adoption, processing volume).`,
+        },
+        {
           name: "thank-you",
           category: "fundraising",
           description: "Drafts personalized thank-you emails for recent donors by composing Bloomerang giving history with Gmail. Run daily; never miss a 48h thank-you window. Requires the bloomerang-mcp server.",
           author: "Callan Rogers-Grazado",
+          audience: "customer",
           requires: {
             label: "bloomerang-mcp",
             href: "https://github.com/callanable/bloomerang-mcp",
@@ -219,6 +261,13 @@ Q3 check-in.
           el(
             "div",
             { class: "plugin-meta" },
+            plugin.audience
+              ? el(
+                  "span",
+                  { class: `pill audience-${plugin.audience}` },
+                  plugin.audience === "internal" ? "for employees" : "for customers",
+                )
+              : null,
             el("span", { class: "pill" }, plugin.category),
             el("span", {}, `by ${plugin.author}`),
           ),

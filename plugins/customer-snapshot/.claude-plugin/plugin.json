@@ -1,0 +1,9 @@
+{
+  "name": "customer-snapshot",
+  "description": "One-screen snapshot of a Bloomerang nonprofit customer — account record, usage signals, recent touches, open items, and a suggested next action. For CS and Support to run before any customer conversation.",
+  "version": "0.1.0",
+  "author": {
+    "name": "Callan Rogers-Grazado",
+    "email": "callanatalanta@gmail.com"
+  }
+}
