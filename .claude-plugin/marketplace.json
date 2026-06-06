@@ -17,6 +17,15 @@
       "source": "./plugins/meeting-prep"
     },
     {
+      "name": "oncall-handoff",
+      "description": "Synthesize PagerDuty + Slack + GitHub into the brief the next on-call needs. Run at the end of your rotation; the next person walks in already in context.",
+      "author": {
+        "name": "Callan Rogers-Grazado"
+      },
+      "category": "engineering",
+      "source": "./plugins/oncall-handoff"
+    },
+    {
       "name": "customer-snapshot",
       "description": "One-screen snapshot of a Bloomerang customer — account record, usage signals, recent touches, and a suggested next action. For CS and Support to run before any customer conversation.",
       "author": {

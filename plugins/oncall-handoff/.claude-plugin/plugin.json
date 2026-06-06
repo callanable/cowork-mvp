@@ -1,0 +1,9 @@
+{
+  "name": "oncall-handoff",
+  "description": "Synthesize PagerDuty + Slack + recent commits into the handoff brief the next on-call needs. Run at the end of your rotation; the next person walks in already in context.",
+  "version": "0.1.0",
+  "author": {
+    "name": "Callan Rogers-Grazado",
+    "email": "callanatalanta@gmail.com"
+  }
+}

@@ -7,7 +7,9 @@ argument-hint: <customer-name-or-domain>
 
 # /customer-snapshot — Pre-conversation customer brief
 
-The single most-used skill on a customer success team. Run it before any call, email, or QBR and get a one-screen view of:
+This is a **sketch** of how a customer-facing skill composes Bloomerang data with first-party connectors. The brief's "Sources" footer is explicit about which MCPs were queried and which would be wired in a fuller version — that footer doubles as a platform-feedback loop ("skills tell you which MCPs to wire next"). See the [plugin README](../../README.md) for honesty about the demo data.
+
+Run it before any call, email, or QBR and get a one-screen view of:
 
 - Who they are and how big
 - How they're using the product

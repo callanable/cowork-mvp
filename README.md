@@ -1,145 +1,45 @@
 # cowork-mvp — Bloomerang internal skills marketplace
 
-A small Claude Code plugin marketplace built around a single thesis: the unit of capability in an internal AI platform is an **installable skill that composes existing MCPs**.
+A small Claude Code plugin marketplace built around a single thesis: the unit of capability in an internal AI platform is an **installable skill that composes existing MCPs**. The platform owns the identity layer, the MCP-wiring layer, and the marketplace; skill authors own the workflows.
 
-Two skills today:
+## Live demo
 
-- **`/meeting-prep`** — Pre-meeting brief from Calendar + Gmail + Drive.
-- **`/customer-snapshot`** — One-screen view of a Bloomerang customer before any CS/Support/AE conversation: account record, usage signals, recent touches, suggested next action. Requires [bloomerang-mcp](https://github.com/callanable/bloomerang-mcp).
+**https://callanable.github.io/cowork-mvp/**
 
-Both are small on purpose. The point is the *pattern*: installable, governable, shareable capabilities that compose primitives the platform team already owns.
+Sign in with Google → the page reads your identity, picks a role, and shows which MCPs are provisioned and which skills are available to you. The OIDC flow is real. The role-to-MCP mapping is mocked for the demo; in production it's driven by Workspace groups, SCIM, or HRIS, owned by the platform's identity broker.
 
-See [`DESIGN.md`](DESIGN.md) for how this generalizes — memory layer, RBAC via MCP scoping, PR-based shipping. See the [marketplace site](https://callanable.github.io/cowork-mvp/) for a browseable view including the OIDC sign-in + provisioning demo.
+What the demo shows end to end:
 
-### Companion repo
+- **Identity** — real Google OIDC sign-in
+- **Role** — derived from claims (mocked here as a picker)
+- **MCPs** — which data sources are wired for that role
+- **Skills** — which marketplace plugins that role can run
 
-- [**bloomerang-mcp**](https://github.com/callanable/bloomerang-mcp) — MCP server that wraps Bloomerang's donor CRM API. CS/Support use it to look into a customer's account at how they're using the product. One of several MCPs an internal platform would wire up.
+That's the JD's "Frictionless Access" and "Marketplace of Skills" bullets, working.
 
----
+## Skills
 
-## meeting-prep
+Three plugins ship today. Each has its own README under `plugins/<name>/`.
 
-A Claude Code plugin that turns three Google Workspace MCPs into a single command: `/meeting-prep`.
+- **[`/meeting-prep`](plugins/meeting-prep/README.md)** — Pre-meeting brief from Calendar + Gmail + Drive. The polished worked example: useful to anyone with meetings, composes three first-party Anthropic Connectors, no custom MCPs required.
+- **[`/oncall-handoff`](plugins/oncall-handoff/README.md)** — Synthesize PagerDuty + Slack + recent commits into the handoff brief the next on-call needs. Internal-platform-engineering shape.
+- **[`/customer-snapshot`](plugins/customer-snapshot/README.md)** — Pre-conversation brief for CS/Support/AE looking at a specific customer's Bloomerang account. Composes [bloomerang-mcp](https://github.com/callanable/bloomerang-mcp) with Gmail. Sketch — the brief is honest about which MCPs would be wired in production.
 
-Run it before any meeting and it produces a one-page brief — attendees, recent email context per person, related Drive docs, open threads, suggested talking points. Zero configuration once the plugin is installed.
+## Companion repo
 
----
-
-## What you get
-
-A single skill: **`/meeting-prep [event-title-or-keyword]`**
-
-- No args → briefs your next meeting.
-- With args → briefs the next upcoming meeting matching that title or attendee.
-
-Example output:
-
-```
-# Meeting Prep — Quarterly review with Acme Foundation
-Tuesday 2:00 PM · 30 min · meet.google.com/abc-defg-hij
-
-## Attendees
-- Jane Smith <jane@acmefoundation.org> — Director of Development, Acme Foundation
-- Mark Lee <mark@acmefoundation.org> — Program Manager
-
-## Context
-Acme adopted Bloomerang in Q1 and ran their spring appeal through the
-platform — Jane reported a 22% YoY lift two weeks ago. Last touch was Jane
-asking about the new recurring-giving widget on May 12; no reply yet.
-
-## Open threads
-- Jane: asked about Q3 roadmap for the recurring-giving widget (May 12)
-- Mark: requested CSV export format docs (May 8) — replied with link May 9
-
-## Relevant docs
-- "Acme Foundation — Onboarding Notes" — original implementation plan, has
-  their custom field mappings
-- "Q1 Customer Health — Top 50" — Acme is in green tier, NPS 9
-
-## Suggested talking points
-- Walk back to Jane's May 12 question; the recurring-giving roadmap update
-  shipped last week
-- Confirm Q3 expansion conversation is still on for August
-- Ask about staffing changes — Mark's title in his sig changed since onboarding
-```
-
----
+- **[bloomerang-mcp](https://github.com/callanable/bloomerang-mcp)** — Example MCP server. Wraps Bloomerang's donor CRM API as an illustration of the data-primitive pattern. In production an internal AI platform wires up several such MCPs (customer DB, Salesforce, Zendesk, Looker) — each a small, governed tool surface that skills compose against.
 
 ## Install
 
-> **Note for end users**: you should never have to do any of this. In a real deployment, IT registers the org marketplace once in Cowork settings, and `/meeting-prep` just appears in every employee's session. The steps below are for testing the plugin on your own machine, or for IT adding it to the org marketplace the first time.
-
-### How an employee actually gets it (production model)
-
-Zero steps. IT adds the marketplace to Cowork's org-wide config once; employees see `/meeting-prep` on next session start. No clones, no dialogs, no paths.
-
-### How IT adds it to an org marketplace
-
-Copy `plugins/meeting-prep/` into your org's private marketplace repo and add an entry to its `marketplace.json`. Push. Done — every Cowork user in the org gets it on next sync.
-
-### How to test it locally (for evaluators)
-
-```bash
-git clone <this repo> ~/cowork-mvp
-```
-
-Then in Claude Code, run these as **two separate commands**:
-
-1. Type or paste this and press Enter:
-   ```
-   /plugin marketplace add ~/cowork-mvp
-   ```
-   A dialog appears with the path pre-filled — press Enter again to confirm. (If you type a path manually in the dialog, don't escape spaces — it's a text field, not a shell.)
-
-2. Then:
-   ```
-   /plugin install meeting-prep@cowork-mvp
-   ```
-
-Restart Claude Code, then `/meeting-prep` is available in any session.
-
----
-
-## Prerequisites
-
-This plugin assumes the following MCPs are available in the user's Cowork environment — most teams already have them via the Anthropic Connectors panel (Settings → Connectors):
-
-- **Google Calendar** connector — enabled
-- **Gmail** connector — enabled
-- **Google Drive** connector — enabled
-
-The plugin doesn't ship its own MCP servers because Cowork's first-party Google connectors already handle OAuth, refresh, and scope management correctly. If your org has Google Workspace + Cowork enabled, you're already done.
-
-If a connector is missing when `/meeting-prep` runs, the skill will tell the user which tool it couldn't find rather than failing silently.
-
----
-
-## Usage
-
-In any Claude Code session:
+In a real Bloomerang deployment, IT registers this marketplace once in Cowork settings and every employee gets the skills on next session start — no per-employee setup. The two commands below are for local testing or first-time IT setup.
 
 ```
-/meeting-prep
+/plugin marketplace add ~/cowork-mvp
+/plugin install meeting-prep@cowork-mvp
 ```
 
-or
+(Substitute any plugin name. Restart Claude Code after installing.)
 
-```
-/meeting-prep acme
-/meeting-prep "quarterly review"
-/meeting-prep jane@acmefoundation.org
-```
+## Design
 
-The brief is printed inline. Copy to a doc, paste into a Slack thread, or just read it. The skill doesn't persist anything — it's stateless by design (see `DESIGN.md` for the memory layer plan).
-
----
-
-## What's next
-
-See `DESIGN.md` for the full thinking on how this plugin pattern scales into a real internal AI platform.
-
-Near-term ideas already half-baked:
-
-- **Bring-your-own context** — drop a PDF/markdown file in `context/` and have the skill include it when relevant (e.g. a customer's contract, a job description, a deal brief).
-- **Memory layer** — write attendee summaries to a per-person memory file so the second prep for the same customer is faster, richer, and shows what's changed since last time.
-- **Scheduled briefs** — cron 30 minutes before each meeting, drop the brief into a Drive doc the user already has open.
+See [`DESIGN.md`](DESIGN.md) for the platform thinking — memory layer, RBAC via MCP scoping, PR-based shipping for skill contributions.

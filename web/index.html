@@ -123,7 +123,7 @@
     <header class="hero">
       <div class="eyebrow">Cowork · Skills Marketplace</div>
       <h1>Sign in once. Every tool ready on day one.</h1>
-      <p class="lede">An <strong>installable, governable AI skills marketplace</strong> for Bloomerang. Sign in with Google → the platform reads your identity and provisions the right MCPs and skills for your role. Skills compose the MCPs your org already owns into one-command workflows.</p>
+      <p class="lede">The platform pattern: <strong>identity → role → provisioned MCPs → installable skills</strong>. Sign in with Google and the page reads your role, shows which data sources are wired for you, and lists which skills you can run. The skills compose the MCPs the platform team already owns.</p>
     </header>
 
     <section class="about">
@@ -201,6 +201,45 @@ asking about the new recurring-giving widget on May 12; no reply yet.
   update shipped last week
 - Confirm Q3 expansion conversation is still on for August
 - Ask about staffing changes — Mark's title in his sig changed`,
+        },
+        {
+          name: "oncall-handoff",
+          category: "engineering",
+          description: "Synthesize PagerDuty + Slack + GitHub into the brief the next on-call needs. Run at the end of your rotation; the next person walks in already in context. The internal-platform-engineering example in this marketplace.",
+          author: "Callan Rogers-Grazado",
+          example: `# On-Call Handoff — Sarah → Marcus
+Rotation: 2026-05-30 → 2026-06-06
+
+## Still in flight (top of pager)
+- INC-4012 · Donation processing webhook retry storm · P2
+  Last update: 14:22 — backoff deployed, queue draining, ETA 2h.
+  Owner / next step: Marcus — verify queue is empty by 17:00;
+  page Sarah if not.
+
+## Resolved this rotation
+- 11 incidents · 3 noise · top by severity:
+  - INC-4001 · Bloomerang admin 500s on org search · stale
+    index, reindexed
+  - INC-3998 · Stripe webhook auth rotation · key rotated,
+    runbook updated
+  - INC-3994 · CSV export job OOM · bumped worker memory tier
+
+## Shipped to production
+- "Add idempotency keys to donation processor" · @amaya ·
+  reduces dupe-charge risk on retry
+- "Migrate constituent search to OpenSearch 2.x" · @rj ·
+  should fix INC-4001 class
+
+## Watch list (next 24h)
+- INC-4012 retry storm: if it recurs, the new backoff isn't
+  enough — escalate to @reliability.
+- Donation processor (just shipped idempotency): watch for
+  any odd duplicate-charge reports.
+
+---
+Sources: pagerduty (4 calls), slack (7 threads), github (12 PRs).
+Stubs in this MVP: Sentry (error-group volume), Datadog
+  (saturation alarms).`,
         },
         {
           name: "customer-snapshot",
@@ -297,11 +336,12 @@ Not yet wired in this demo: Zendesk (open tickets, severity, age),
           { name: "Gmail", status: "yes" },
           { name: "Google Drive", status: "yes" },
           { name: "GitHub", status: "yes" },
-          { name: "Sentry", status: "yes" },
+          { name: "PagerDuty", status: "yes" },
+          { name: "Slack", status: "yes" },
           { name: "Bloomerang Admin", status: "no" },
           { name: "Salesforce", status: "no" },
         ],
-        provisioned: new Set(["meeting-prep"]),
+        provisioned: new Set(["meeting-prep", "oncall-handoff"]),
       },
     };
 
