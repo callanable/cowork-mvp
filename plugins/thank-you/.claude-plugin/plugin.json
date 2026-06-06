@@ -1,9 +1,0 @@
-{
-  "name": "thank-you",
-  "description": "Drafts personalized thank-you emails for recent donations by composing Bloomerang giving data with Gmail. Run daily; never miss a 48h thank-you window again.",
-  "version": "0.1.0",
-  "author": {
-    "name": "Callan Rogers-Grazado",
-    "email": "callanatalanta@gmail.com"
-  }
-}

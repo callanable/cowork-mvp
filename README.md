@@ -1,25 +1,19 @@
-# cowork-mvp — skills marketplace
+# cowork-mvp — Bloomerang internal skills marketplace
 
 A small Claude Code plugin marketplace built around a single thesis: the unit of capability in an internal AI platform is an **installable skill that composes existing MCPs**.
 
-Currently ships three skills, spanning two audiences:
+Two skills today:
 
-**For any employee with meetings:**
-- **`/meeting-prep`** — Pre-meeting brief from Calendar + Gmail + Drive. (No external MCP required beyond first-party Google connectors.)
+- **`/meeting-prep`** — Pre-meeting brief from Calendar + Gmail + Drive.
+- **`/customer-snapshot`** — One-screen view of a Bloomerang customer before any CS/Support/AE conversation: account record, usage signals, recent touches, suggested next action. Requires [bloomerang-mcp](https://github.com/callanable/bloomerang-mcp).
 
-**For Bloomerang's own CS / Support / Sales teams (the audience this platform actually serves):**
-- **`/customer-snapshot`** — One-screen snapshot of a nonprofit customer before any call: account record, usage signals, recent touches, suggested next action. Requires [bloomerang-mcp](https://github.com/callanable/bloomerang-mcp).
+Both are small on purpose. The point is the *pattern*: installable, governable, shareable capabilities that compose primitives the platform team already owns.
 
-**For Bloomerang's *customers* (a fundraiser at a nonprofit using Cowork):**
-- **`/thank-you`** — Drafts personalized donor thank-yous from recent Bloomerang gifts. Requires [bloomerang-mcp](https://github.com/callanable/bloomerang-mcp). Demonstrates that the same marketplace + MCP architecture serves both internal users and the customers our customers serve.
+See [`DESIGN.md`](DESIGN.md) for how this generalizes — memory layer, RBAC via MCP scoping, PR-based shipping. See the [marketplace site](https://callanable.github.io/cowork-mvp/) for a browseable view including the OIDC sign-in + provisioning demo.
 
-All three are small on purpose. The point is the *pattern*: installable, governable, shareable capabilities that compose primitives the platform team already owns.
+### Companion repo
 
-See [`DESIGN.md`](DESIGN.md) for how this generalizes to a real internal AI platform — memory layer, RBAC via MCP scoping, PR-based shipping. See the [marketplace site](https://callanable.github.io/cowork-mvp/) for a browseable view.
-
-### Companion repos
-
-- [**bloomerang-mcp**](https://github.com/callanable/bloomerang-mcp) — MCP server exposing the Bloomerang donor CRM as a small set of governable tools. The platform-owned data primitive that donor-aware skills compose against.
+- [**bloomerang-mcp**](https://github.com/callanable/bloomerang-mcp) — MCP server that wraps customer data as a small, governable tool surface. The platform-owned data primitive that customer-aware skills compose against.
 
 ---
 

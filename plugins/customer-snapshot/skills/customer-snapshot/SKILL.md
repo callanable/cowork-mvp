@@ -1,21 +1,19 @@
 ---
 name: customer-snapshot
-description: One-screen snapshot of a Bloomerang nonprofit customer — account record, usage signals, recent touches, open items, and a suggested next action. Use when a CSM, AE, or Support engineer asks to "pull up <customer>", "what's the latest on <customer>", "snapshot of <customer>", or runs /customer-snapshot. For internal use before any customer-facing conversation.
+description: One-screen snapshot of a Bloomerang customer — account record, usage signals, recent touches, open items, and a suggested next action. Use when a CSM, AE, or Support engineer asks to "pull up <customer>", "what's the latest on <customer>", "snapshot of <customer>", or runs /customer-snapshot. Run before any customer-facing conversation.
 user-invocable: true
 argument-hint: <customer-name-or-domain>
 ---
 
 # /customer-snapshot — Pre-conversation customer brief
 
-The single most-used skill on a customer success team. Run it before any call, email, or QBR with a Bloomerang customer (a nonprofit on the platform) and get a one-screen view of:
+The single most-used skill on a customer success team. Run it before any call, email, or QBR and get a one-screen view of:
 
 - Who they are and how big
-- How they're using Bloomerang
+- How they're using the product
 - What's happened recently — touches, tickets, signals
 - What's open and unresolved
 - What the next action should be
-
-The skill is for **Bloomerang employees** (CSM, AE, Support, Onboarding). The "customer" is a nonprofit using Bloomerang. This is the employee-facing read of the [bloomerang-mcp](https://github.com/callanable/bloomerang-mcp) data primitive — see that repo's README for the framing.
 
 ---
 

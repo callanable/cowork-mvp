@@ -77,8 +77,6 @@
     .plugin-name code { font-family: var(--mono); font-size: 18px; background: var(--accent-soft); color: var(--accent); padding: 2px 8px; border-radius: 6px; }
     .plugin-meta { font-size: 13px; color: var(--ink-faint); display: flex; gap: 12px; align-items: center; }
     .pill { display: inline-block; font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; background: #f0ede4; color: var(--ink-soft); padding: 3px 8px; border-radius: 999px; font-weight: 600; }
-    .pill.audience-internal { background: #e6f0eb; color: #2f6f3f; }
-    .pill.audience-customer { background: #fdf0e6; color: #a55c1f; }
     .pill.prov-yes { background: var(--ok-soft); color: var(--ok); }
     .pill.prov-no { background: var(--no-soft); color: var(--no); }
     .plugin-desc { color: var(--ink-soft); margin: 16px 0 0; font-size: 15px; }
@@ -123,14 +121,14 @@
     </div>
 
     <header class="hero">
-      <div class="eyebrow">Demo MVP · Bloomerang AI Platform Engineer interview</div>
+      <div class="eyebrow">Cowork · Skills Marketplace</div>
       <h1>Sign in once. Every tool ready on day one.</h1>
-      <p class="lede">A marketplace of <strong>installable, governable AI skills</strong>. Sign in with Google → the platform reads your identity and provisions the right MCPs and skills for your role. Skills compose the MCPs your org already owns into one-command workflows.</p>
+      <p class="lede">An <strong>installable, governable AI skills marketplace</strong> for Bloomerang. Sign in with Google → the platform reads your identity and provisions the right MCPs and skills for your role. Skills compose the MCPs your org already owns into one-command workflows.</p>
     </header>
 
     <section class="about">
-      <p>This page demonstrates the <strong>Frictionless Access</strong> pattern from the JD: OIDC identity → role mapping → provisioned MCPs → available skills. The sign-in is real (Google OIDC); the role-to-MCP mapping is mocked for the demo. In production, claims come from your Workspace groups, SCIM, or HRIS, and the platform's identity broker owns the mapping config.</p>
-      <p>See <a href="https://github.com/callanable/cowork-mvp" target="_blank" rel="noopener">cowork-mvp</a> for the marketplace + skills, and <a href="https://github.com/callanable/bloomerang-mcp" target="_blank" rel="noopener">bloomerang-mcp</a> for the data-primitive pattern.</p>
+      <p>Sign-in is real Google OIDC. The role-to-MCP mapping is mocked here for the demo; in production it's driven by Workspace groups, SCIM, or HRIS — owned by the platform's identity broker.</p>
+      <p>Source: <a href="https://github.com/callanable/cowork-mvp" target="_blank" rel="noopener">cowork-mvp</a> (marketplace + skills) and <a href="https://github.com/callanable/bloomerang-mcp" target="_blank" rel="noopener">bloomerang-mcp</a> (customer-data primitive).</p>
     </section>
 
     <!-- Provisioning banner: hidden until signed in -->
@@ -182,7 +180,6 @@
           category: "productivity",
           description: "Composes Google Calendar, Gmail, and Drive into a one-command meeting brief. Run it before any meeting and get a one-page brief — attendees, recent email context per person, related Drive docs, open threads, suggested talking points.",
           author: "Callan Rogers-Grazado",
-          audience: "internal",
           example: `# Meeting Prep — Quarterly review with Acme Foundation
 Tuesday 2:00 PM · 30 min · meet.google.com/abc-defg-hij
 
@@ -208,9 +205,8 @@ asking about the new recurring-giving widget on May 12; no reply yet.
         {
           name: "customer-snapshot",
           category: "customer-success",
-          description: "One-screen snapshot of a Bloomerang nonprofit customer — account record, usage signals, recent touches, open items, and a suggested next action. The CSM/Support skill you run before every customer conversation.",
+          description: "One-screen snapshot of a Bloomerang customer — account record, usage signals, recent touches, open items, and a suggested next action. The CSM/Support skill you run before every customer conversation.",
           author: "Callan Rogers-Grazado",
-          audience: "internal",
           requires: {
             label: "bloomerang-mcp",
             href: "https://github.com/callanable/bloomerang-mcp",
@@ -243,42 +239,6 @@ Not yet wired in this demo: Zendesk (open tickets, severity, age),
   Salesforce (renewal date, ARR, CSM owner, health score),
   Looker (login frequency, feature adoption, processing volume).`,
         },
-        {
-          name: "thank-you",
-          category: "fundraising",
-          description: "Drafts personalized thank-you emails for recent donors by composing Bloomerang giving history with Gmail. Run daily; never miss a 48h thank-you window. Requires the bloomerang-mcp server.",
-          author: "Callan Rogers-Grazado",
-          audience: "customer",
-          requires: {
-            label: "bloomerang-mcp",
-            href: "https://github.com/callanable/bloomerang-mcp",
-          },
-          example: `─── Gift: Maria Gonzalez, $250 on 2026-06-01 — first-time ───
-To: maria.g@hotmail.com
-Subject: Thank you for your gift to the Spring Appeal
-
-Maria — your $250 first-time gift to the Spring Appeal just landed,
-and I wanted to thank you personally. Gifts at this level fund our
-recurring-giving infrastructure, which is what helped our partners at
-Acme Foundation lift their spring numbers 22% this year.
-
-I'd love to send you a short update later this quarter on what your
-gift went toward. Welcome to the community.
-
-— Callan
-
-─── Gift: Acme Foundation, $25,000 on 2026-04-10 — major-repeat ───
-To: jane@acmefoundation.org
-Subject: Thank you for Acme's Spring Appeal commitment
-
-Jane — thank you for the $25K spring appeal commitment, especially
-given it's restricted to the recurring-giving expansion we talked
-about in April. That work is now live in beta with three partner
-orgs, and I'll have something tangible to walk you through at our
-Q3 check-in.
-
-— Callan`,
-        },
       ],
     };
 
@@ -292,8 +252,7 @@ Q3 check-in.
 
     const ROLES = {
       csm: {
-        label: "Customer Success Manager (internal)",
-        audience: "internal",
+        label: "Customer Success Manager",
         mcps: [
           { name: "Google Calendar", status: "yes" },
           { name: "Gmail", status: "yes" },
@@ -306,8 +265,7 @@ Q3 check-in.
         provisioned: new Set(["meeting-prep", "customer-snapshot"]),
       },
       ae: {
-        label: "Account Executive (internal)",
-        audience: "internal",
+        label: "Account Executive",
         mcps: [
           { name: "Google Calendar", status: "yes" },
           { name: "Gmail", status: "yes" },
@@ -320,8 +278,7 @@ Q3 check-in.
         provisioned: new Set(["meeting-prep", "customer-snapshot"]),
       },
       support: {
-        label: "Support Engineer (internal)",
-        audience: "internal",
+        label: "Support Engineer",
         mcps: [
           { name: "Google Calendar", status: "yes" },
           { name: "Gmail", status: "yes" },
@@ -334,8 +291,7 @@ Q3 check-in.
         provisioned: new Set(["meeting-prep", "customer-snapshot"]),
       },
       engineer: {
-        label: "Software Engineer (internal)",
-        audience: "internal",
+        label: "Software Engineer",
         mcps: [
           { name: "Google Calendar", status: "yes" },
           { name: "Gmail", status: "yes" },
@@ -346,19 +302,6 @@ Q3 check-in.
           { name: "Salesforce", status: "no" },
         ],
         provisioned: new Set(["meeting-prep"]),
-      },
-      external: {
-        label: "External — Cowork customer (fundraiser at a nonprofit)",
-        audience: "customer",
-        mcps: [
-          { name: "Google Calendar", status: "yes" },
-          { name: "Gmail", status: "yes" },
-          { name: "Google Drive", status: "yes" },
-          { name: "Bloomerang Donor CRM", status: "yes" },
-          { name: "Bloomerang Admin (internal)", status: "no" },
-          { name: "Salesforce (internal)", status: "no" },
-        ],
-        provisioned: new Set(["meeting-prep", "thank-you"]),
       },
     };
 
@@ -568,13 +511,6 @@ Q3 check-in.
               : provisioned === false
                 ? el("span", { class: "pill prov-no" }, "not in your scope")
                 : null,
-            plugin.audience
-              ? el(
-                  "span",
-                  { class: `pill audience-${plugin.audience}` },
-                  plugin.audience === "internal" ? "for employees" : "for customers",
-                )
-              : null,
             el("span", { class: "pill" }, plugin.category),
             el("span", {}, `by ${plugin.author}`),
           ),

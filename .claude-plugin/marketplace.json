@@ -1,7 +1,7 @@
 {
   "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
   "name": "cowork-mvp",
-  "description": "Callan's MVP marketplace for the Bloomerang AI Platform Engineer interview — a small set of skills that compose Google Workspace and the Bloomerang donor CRM, built to demonstrate the marketplace-of-skills pattern.",
+  "description": "Marketplace of installable skills for Bloomerang's internal AI platform. Each skill composes existing MCPs into one-command workflows employees use without thinking about it.",
   "owner": {
     "name": "Callan Rogers-Grazado",
     "email": "callanatalanta@gmail.com"
@@ -17,17 +17,8 @@
       "source": "./plugins/meeting-prep"
     },
     {
-      "name": "thank-you",
-      "description": "Drafts personalized thank-you emails for recent donors by composing Bloomerang giving history with Gmail.",
-      "author": {
-        "name": "Callan Rogers-Grazado"
-      },
-      "category": "fundraising",
-      "source": "./plugins/thank-you"
-    },
-    {
       "name": "customer-snapshot",
-      "description": "One-screen snapshot of a Bloomerang nonprofit customer — account record, usage signals, recent touches, and a suggested next action. For CS and Support to run before any customer conversation.",
+      "description": "One-screen snapshot of a Bloomerang customer — account record, usage signals, recent touches, and a suggested next action. For CS and Support to run before any customer conversation.",
       "author": {
         "name": "Callan Rogers-Grazado"
       },
