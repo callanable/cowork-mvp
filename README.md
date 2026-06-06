@@ -13,7 +13,7 @@ See [`DESIGN.md`](DESIGN.md) for how this generalizes — memory layer, RBAC via
 
 ### Companion repo
 
-- [**bloomerang-mcp**](https://github.com/callanable/bloomerang-mcp) — MCP server that wraps customer data as a small, governable tool surface. The platform-owned data primitive that customer-aware skills compose against.
+- [**bloomerang-mcp**](https://github.com/callanable/bloomerang-mcp) — MCP server that wraps Bloomerang's donor CRM API. CS/Support use it to look into a customer's account at how they're using the product. One of several MCPs an internal platform would wire up.
 
 ---
 

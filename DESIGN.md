@@ -1,12 +1,12 @@
-# Design — why this plugin, and how it generalizes
+# Design — why these skills, and how the pattern generalizes
 
 ## Thesis
 
 The interesting question isn't "what AI feature should we build?" It's "what does the *unit of capability* look like in an internal AI platform?"
 
-This plugin is one answer: a **skill, packaged as a plugin, composing MCPs that the org already has**. Install once. Every employee gets it. Zero per-user configuration. The skill is the marketplace unit; the plugin is the install primitive; the MCPs are the governed-data primitive.
+The answer here: a **skill, packaged as a plugin, composing MCPs that the org already has**. Install once. Every employee gets it. Zero per-user configuration. The skill is the marketplace unit; the plugin is the install primitive; the MCPs are the governed-data primitive.
 
-`meeting-prep` is deliberately small. It's a demo of the *shape*, not the destination.
+The two shipped skills (`meeting-prep`, `customer-snapshot`) plus the [`bloomerang-mcp`](https://github.com/callanable/bloomerang-mcp) data primitive are deliberately small. They're a demo of the *shape*, not the destination.
 
 ## Why a skill, not a chatbot
 
@@ -47,11 +47,11 @@ That's where RBAC lives. The platform decides — per user, per Okta group, per 
 
 The same `meeting-prep` skill works for all of them; what it can *see* depends entirely on what MCPs are scoped to that user. The skill is portable; the data governance is centralized.
 
-This is the "tiered data model with role-based, just-in-time access" from the JD — implemented at the MCP layer, not duplicated in each skill.
+This is how tiered data and role-based, just-in-time access actually get implemented — at the MCP layer, not duplicated in each skill.
 
 ## What it took to ship this
 
-One evening. Four files: a plugin manifest, a skill, a README, this doc. No new infrastructure, no custom server, no model fine-tuning. The platform is mostly *composition*, not invention — most of the leverage is in deciding what to wire to what and shipping the resulting capability as something employees can actually find and run.
+A handful of files across two repos — plugin manifests, skill descriptions, the bloomerang-mcp server, a README, this doc. No new infrastructure beyond the MCP server, no model fine-tuning. The platform is mostly *composition*, not invention — most of the leverage is in deciding what to wire to what and shipping the resulting capability as something employees can actually find and run.
 
 The bias I'd bring to the role: ship small, ship often, let usage data tell you what to invest in next.
 
