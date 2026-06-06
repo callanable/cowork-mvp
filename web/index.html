@@ -45,6 +45,8 @@
     .plugin-meta { font-size: 13px; color: var(--ink-faint); display: flex; gap: 12px; align-items: center; }
     .pill { display: inline-block; font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; background: #f0ede4; color: var(--ink-soft); padding: 3px 8px; border-radius: 999px; font-weight: 600; }
     .plugin-desc { color: var(--ink-soft); margin: 16px 0 0; font-size: 15px; }
+    .plugin-requires { margin: 10px 0 0; font-size: 13px; color: var(--ink-faint); }
+    .plugin-requires a { color: var(--accent); }
 
     .install { margin-top: 24px; }
     .install-label { font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 8px; font-weight: 600; }
@@ -128,6 +130,41 @@ asking about the new recurring-giving widget on May 12; no reply yet.
 - Confirm Q3 expansion conversation is still on for August
 - Ask about staffing changes — Mark's title in his sig changed`,
         },
+        {
+          name: "thank-you",
+          category: "fundraising",
+          description: "Drafts personalized thank-you emails for recent donors by composing Bloomerang giving history with Gmail. Run daily; never miss a 48h thank-you window. Requires the bloomerang-mcp server.",
+          author: "Callan Rogers-Grazado",
+          requires: {
+            label: "bloomerang-mcp",
+            href: "https://github.com/callanable/bloomerang-mcp",
+          },
+          example: `─── Gift: Maria Gonzalez, $250 on 2026-06-01 — first-time ───
+To: maria.g@hotmail.com
+Subject: Thank you for your gift to the Spring Appeal
+
+Maria — your $250 first-time gift to the Spring Appeal just landed,
+and I wanted to thank you personally. Gifts at this level fund our
+recurring-giving infrastructure, which is what helped our partners at
+Acme Foundation lift their spring numbers 22% this year.
+
+I'd love to send you a short update later this quarter on what your
+gift went toward. Welcome to the community.
+
+— Callan
+
+─── Gift: Acme Foundation, $25,000 on 2026-04-10 — major-repeat ───
+To: jane@acmefoundation.org
+Subject: Thank you for Acme's Spring Appeal commitment
+
+Jane — thank you for the $25K spring appeal commitment, especially
+given it's restricted to the recurring-giving expansion we talked
+about in April. That work is now live in beta with three partner
+orgs, and I'll have something tangible to walk you through at our
+Q3 check-in.
+
+— Callan`,
+        },
       ],
     };
 
@@ -187,6 +224,15 @@ asking about the new recurring-giving widget on May 12; no reply yet.
           ),
         ),
         el("p", { class: "plugin-desc" }, plugin.description),
+        plugin.requires
+          ? el(
+              "p",
+              { class: "plugin-requires" },
+              "Requires ",
+              el("a", { href: plugin.requires.href, target: "_blank", rel: "noopener" }, plugin.requires.label),
+              " to be wired as an MCP server in the user's Cowork environment.",
+            )
+          : null,
         el(
           "div",
           { class: "install" },

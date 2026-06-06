@@ -1,12 +1,27 @@
-# meeting-prep
+# cowork-mvp — skills marketplace
+
+A small Claude Code plugin marketplace built around a single thesis: the unit of capability in an internal AI platform is an **installable skill that composes existing MCPs**.
+
+Currently ships two skills:
+
+- **`/meeting-prep`** — Pre-meeting brief from Calendar + Gmail + Drive. (No external MCP required beyond first-party Google connectors.)
+- **`/thank-you`** — Drafts personalized donor thank-yous from recent Bloomerang gifts. Requires the companion [bloomerang-mcp](https://github.com/callanable/bloomerang-mcp) server.
+
+Both are small on purpose. The point is the *pattern*: installable, governable, shareable capabilities that compose primitives the platform team already owns.
+
+See [`DESIGN.md`](DESIGN.md) for how this generalizes to a real internal AI platform — memory layer, RBAC via MCP scoping, PR-based shipping. See the [marketplace site](https://callanable.github.io/cowork-mvp/) for a browseable view.
+
+### Companion repos
+
+- [**bloomerang-mcp**](https://github.com/callanable/bloomerang-mcp) — MCP server exposing the Bloomerang donor CRM as a small set of governable tools. The platform-owned data primitive that donor-aware skills compose against.
+
+---
+
+## meeting-prep
 
 A Claude Code plugin that turns three Google Workspace MCPs into a single command: `/meeting-prep`.
 
 Run it before any meeting and it produces a one-page brief — attendees, recent email context per person, related Drive docs, open threads, suggested talking points. Zero configuration once the plugin is installed.
-
-It's small on purpose. The point is the *pattern*: an installable, governable, shareable skill that composes existing MCPs into something an employee actually uses without thinking about it. One person's prep ritual becomes everyone's baseline.
-
-See `DESIGN.md` for how this generalizes to a real internal AI platform — skills marketplace, memory layer, RBAC via MCP scoping.
 
 ---
 
